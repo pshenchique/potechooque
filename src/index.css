@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'Korakatski';
+  src: url('./assets/fonts/korataki_italic.otf');
+  font-weight: 400;
+  font-style: italic;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-image: url('assets/back.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
