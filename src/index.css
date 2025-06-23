@@ -68,7 +68,7 @@ body {
     background-color: var(--color-secondary);
   }
 
-p{
+p, h1{
     margin: 0;
 }
 
