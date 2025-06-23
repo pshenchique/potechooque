@@ -1,16 +1,78 @@
 @font-face {
-  font-family: 'Korakatski';
-  src: url('./assets/fonts/korataki_italic.otf');
-  font-weight: 400;
-  font-style: italic;
+    font-family: "Korakatski";
+    src: url("./assets/fonts/korataki_italic.otf");
+    font-weight: 400;
+    font-style: italic;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background-image: url('assets/back.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+@font-face {
+    font-family: "Korakatski";
+    src: url("./assets/fonts/korataki_extrabolditalic.otf");
+    font-weight: 800;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Korakatski";
+    src: url("./assets/fonts/korataki_extrabold.otf");
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Korakatski";
+    src: url("./assets/fonts/korataki_light.otf");
+    font-weight: 300;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: "Rimma Sans";
+    src: url("./assets/fonts/rimma_sans.ttf");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Miama Nueva";
+    src: url("./assets/fonts/miamanueva.otf");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Undertale Battle Font";
+    src: url("./assets/fonts/Undertale-Battle-Font.ttf");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Comediant Script";
+    src: url("./assets/fonts/Сomediant.ttf");
+    font-weight: 400;
+}
+
+html,
+body {
+    /* colors */
+    --color-primary: #c1f55f;
+    --color-secondary: #f582b2;
+    --color-secondary-darker: #e93f88;
+    --color-blue: #0404a0;
+    --color-dark: #2d2626;
+    --color-light: #eeeeee;
+    --color-grey: #e4e4e4;
+}
+
+::selection {
+    color: var(--color-light);
+    background-color: var(--color-secondary);
+  }
+
+p{
+    margin: 0;
+}
+
+canvas {
+    height: 100vh;
+    width: 100vw;
 }
