@@ -13,6 +13,8 @@ import cap from "./assets/shop/cap.png";
 
 export const Thresholds = [0, 0.1, 0.2, 0.3, 0.4, 0.9];
 
+
+
 type ShopItem = {
     name: string;
     price: number;

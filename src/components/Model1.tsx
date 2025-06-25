@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useGLTF, Stage } from "@react-three/drei";
+import { useGLTF, Stage, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import styled from "styled-components";
 

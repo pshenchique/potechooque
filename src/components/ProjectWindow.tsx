@@ -63,6 +63,8 @@ const variants = {
     off: { opacity: 0, transition: { duration: 0.1, ease: easeInOut } },
 };
 
+const prefix = `${import.meta.env.BASE_URL}`;
+
 const ProjectWindow: React.FC<ProjectWindowProps> = ({ index, setIsActive }: ProjectWindowProps) => {
     const [activeIndex, setActiveIndex] = useState(index);
 
@@ -95,7 +97,7 @@ const ProjectWindow: React.FC<ProjectWindowProps> = ({ index, setIsActive }: Pro
                     <RandomImage
                         top={getRandomInt(0, 500)}
                         right={getRandomInt(0, 500)}
-                        src={item}
+                        src={prefix+item}
                         animate={{
                             x: [-5, 5, -5],
                             y: [-5, 5, -5],

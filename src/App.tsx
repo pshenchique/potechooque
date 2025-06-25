@@ -1,13 +1,16 @@
 import styled from "styled-components";
 import Model1 from "./components/Model1";
 import Navbar from "./components/Navbar";
-import { AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import ProjectWindow from "./components/ProjectWindow";
 import Shop from "./pages/Shop";
 import BubbleHandler from "./pages/BubbleHandler";
 import Info from "./pages/Info";
 import { Thresholds } from "./Arrays";
+import back from "./assets/back.png"
+
+const modelUrl = `${import.meta.env.BASE_URL}models/m1.gltf`;
 
 const ScrollArea = styled.div`
     height: 500vh;
@@ -21,7 +24,7 @@ const FixedContent = styled.div`
     width: 100vw;
     overflow: hidden;
 
-    background-image: url("back.png");
+    background-image: url(${back});
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -69,7 +72,7 @@ function App() {
                     {leftWindowOpen && <ProjectWindow index={activeLeftWindowIndex} setIsActive={setLeftWindowOpen} />}
 
                     {activeSection !== 5 && activeSection !== 6 && !leftWindowOpen && (
-                        <Model1 modelPath={"/models/m1.gltf"} z={cameraValue} />
+                        <Model1 modelPath={modelUrl} z={cameraValue} />
                     )}
 
                     {activeSection === 1 && !leftWindowOpen && (
