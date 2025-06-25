@@ -3,6 +3,7 @@ import ArrowImage from "../assets/arrow-button.png";
 import styled from "styled-components";
 
 type ArrowButtonProps = {
+    onClick:() => void
     back?: boolean;
 };
 
@@ -25,10 +26,10 @@ const StyledImage = styled.img<ArrowButtonProps>`
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 `;
 
-const ArrowButton: React.FC<ArrowButtonProps> = ({ back = false }) => {
+const ArrowButton: React.FC<ArrowButtonProps> = ({ back = false, onClick }) => {
     return (
         <FlipWrapper back={back}>
-            <StyledImage src={ArrowImage} />;
+            <StyledImage src={ArrowImage} onClick={onClick}/>;
         </FlipWrapper>
     );
 };

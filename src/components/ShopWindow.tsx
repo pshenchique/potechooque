@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import BackButton from "./BackButton";
 import ArrowButton from "./ArrowButton";
-import { AnimatePresence, motion, easeInOut } from "framer-motion";
-import b from "../assets/shop/b.png";
-import i1 from "../assets/shop/1.jpg";
+import { motion, easeInOut } from "framer-motion";
+import tape from "../assets/shop/tape.png";
+import { ShopItems } from "../Arrays";
 
 type ShopWindowProps = {
-    isActive: boolean;
     setIsActive: (state: boolean) => void;
+    index: number;
 };
 
 const StyledContainer = styled.div`
@@ -18,17 +18,18 @@ const StyledContainer = styled.div`
     height: 100%;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    align-items: start;
+    justify-content: space-evenly;
+    gap: 40px;
 `;
 
 const StyledInnerContainer = styled.div`
-    width: 100%;
+flex-grow: 1;
+    padding-top: 20vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-bottom: 300px;
     gap: 20px;
 `;
 
@@ -65,6 +66,12 @@ const StyledP = styled.h1`
     font-weight: 300;
     font-size: 12px;
     max-width: 450px;
+`;
+
+const StyledImage = styled.img<{ hasMain: boolean }>`
+    height: 100%;
+    width: 40vw;
+    object-fit: ${(props) => (props.hasMain ? "contain" : "cover")};
 `;
 
 const BuyButton = styled.div`
@@ -108,32 +115,35 @@ const variants = {
     off: { opacity: 0, transition: { duration: 0.5, ease: easeInOut } },
 };
 
-const ShopWindowProps: React.FC<ShopWindowProps> = ({ isActive, setIsActive }: ShopWindowProps) => {
+const ShopWindowProps: React.FC<ShopWindowProps> = ({ setIsActive, index }: ShopWindowProps) => {
+    const [activeIndex, setActiveIndex] = useState(index);
+
     return (
         <StyledOuterContainer
             initial={{ x: "80vw" }}
-            animate={{ x: 0, transition: { duration: 0.5, ease: easeInOut } }}
-            exit={{ x: "80vw", transition: { duration: 0.5, ease: easeInOut } }}
+            animate={{ x: 0 }}
+            exit={{ x: "80vw" }}
+            transition={{ duration: 0.5, ease: easeInOut }}
         >
             <BackButton onClick={() => setIsActive(false)} shop />
             <StyledContainer>
-                <img src={i1} />
+                <StyledImage
+                    src={ShopItems[activeIndex].image_main ?? ShopItems[activeIndex].image_small}
+                    hasMain={ShopItems[activeIndex].image_main === undefined}
+                />
                 <StyledInnerContainer>
-                    <StyledHeader>Карабин</StyledHeader>
-                    <StyledPrice>900р</StyledPrice>
-                    <StyledP>
-                        структура страницы: 1. Обложка: должна быть яркой, большой заголовок, использование 3д
-                        элементом. 2. короткий текст про студию. 3. портфолио съемочных проектов с ярким представлением.
-                        проекты поделены на категории кино, реклама, клипы, другое. при наведении на проект можно
-                        перейти к нему и увидеть ссылку
-                    </StyledP>
+                    <StyledHeader>{ShopItems[activeIndex].name}</StyledHeader>
+                    <StyledPrice>{ShopItems[activeIndex].price}р</StyledPrice>
+                    <StyledP>{ShopItems[activeIndex].description}</StyledP>
                     <BuyButton>
-                        <img src={b} />
+                        <img src={tape} />
                         <h1>купить</h1>
                     </BuyButton>
                     <motion.div key="arrow-buttons" variants={variants} initial="off" animate="on" exit="off">
-                        <ArrowButton />
-                        <ArrowButton back />
+                        {activeIndex < ShopItems.length - 1 && (
+                            <ArrowButton onClick={() => setActiveIndex(activeIndex + 1)} />
+                        )}
+                        {activeIndex > 0 && <ArrowButton back onClick={() => setActiveIndex(activeIndex - 1)} />}
                     </motion.div>
                 </StyledInnerContainer>
             </StyledContainer>

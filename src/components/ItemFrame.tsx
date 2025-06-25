@@ -1,3 +1,4 @@
+import { AnimatePresence, easeInOut, motion } from "framer-motion";
 import React from "react";
 import styled from "styled-components";
 
@@ -5,12 +6,12 @@ type ItemFrameProps = {
     name: string;
     price: number;
     isActive?: boolean;
-    pic: string;
-    pic_active: string;
-    onClick:(state:boolean) => void;
+    image_small: string | null;
+    image_main: string | null;
+    onClick: (state: boolean) => void;
 };
 
-const FullFrame = styled.img`
+const FullFrame = styled(motion.img)`
     border-radius: 40px;
     border: solid 9px var(--color-primary);
     height: 60vh;
@@ -25,7 +26,7 @@ const FullFrame = styled.img`
     }
 `;
 
-const SmallFrame = styled.div`
+const SmallFrame = styled(motion.div)`
     position: relative;
     width: 500px;
     height: 500px;
@@ -49,7 +50,7 @@ const OverlayImage = styled.img`
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     z-index: 2;
 
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
@@ -62,9 +63,10 @@ const ItemName = styled.h1`
     font-style: normal;
     color: var(--color-light);
     font-size: 32px;
+    text-align: center;
 `;
 
-const ItemPrice = styled.h1`
+const ItemPrice = styled(motion.h1)`
     font-family: "Korakatski";
     text-transform: uppercase;
     font-weight: 800;
@@ -72,12 +74,13 @@ const ItemPrice = styled.h1`
     color: var(--color-primary);
     font-size: 40px;
     text-shadow: 0px 4px 4px #2d26265a;
+    margin-top: 10px;
 `;
 
 const HStack = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     height: 100%;
 
@@ -102,25 +105,44 @@ const HStack = styled.div`
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 `;
 
-const ItemFrame: React.FC<ItemFrameProps> = ({ name, price, isActive = false, pic, pic_active, onClick }: ItemFrameProps) => {
+const fadeInOut = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.5, ease: easeInOut },
+};
+
+const ItemFrame: React.FC<ItemFrameProps> = ({
+    name,
+    price,
+    isActive = false,
+    image_main,
+    image_small,
+    onClick,
+}: ItemFrameProps) => {
     return (
-        <div onClick={()=>onClick(true)}>
-            {isActive ? (
+        <div onClick={() => onClick(true)}>
+            <AnimatePresence>
                 <HStack>
                     <ItemName>{name}</ItemName>
-                    <FullFrame src={pic_active} />
-                    <ItemPrice>{price}р.</ItemPrice>
-                </HStack>
-            ) : (
-                <HStack>
-                    <SmallFrame>
+
+                    {/* {image_main && isActive ? (
+                        <FullFrame {...fadeInOut} src={image_main} />
+                    ) : (
+                        <SmallFrame {...fadeInOut}>
+                            <YellowRect />
+                            <OverlayImage src={image_small ?? image_main!} />
+                        </SmallFrame>
+                    )} */}
+
+                    <SmallFrame {...fadeInOut}>
                         <YellowRect />
-                        <OverlayImage src={pic} />
+                        <OverlayImage src={image_small ?? image_main!} />
                     </SmallFrame>
 
-                    <ItemName>{name}</ItemName>
+                    {isActive && <ItemPrice {...fadeInOut}>{price}р.</ItemPrice>}
                 </HStack>
-            )}
+            </AnimatePresence>
         </div>
     );
 };

@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import BackButton from "./BackButton";
 import ArrowButton from "./ArrowButton";
-import { AnimatePresence, motion, easeInOut } from "framer-motion";
+import { AnimatePresence, motion, easeInOut, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { SetWorks } from "../Arrays";
+import { getRandomInt } from "../utils";
 
 type ProjectWindowProps = {
-    isActive: boolean;
+    index: number;
     setIsActive: (state: boolean) => void;
 };
 
@@ -17,7 +19,7 @@ const StyledContainer = styled(motion.div)`
     display: flex;
     flex-direction: column;
     align-items: start;
-    justify-content: center;
+    justify-content: start;
 `;
 
 const StyledInnerContainer = styled.div`
@@ -25,18 +27,19 @@ const StyledInnerContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: start;
-    justify-content: center;
+    justify-content: start;
     padding-left: 380px;
-    padding-bottom: 300px;
+    padding-top: 30vh;
     gap: 20px;
 `;
 
-const StyledHeader = styled.h1`
+const StyledHeader = styled.div`
     font-family: "Korakatski", sans-serif;
     font-weight: 800;
     font-style: italic;
     font-size: 24px;
     text-transform: uppercase;
+    z-index: 50;
 `;
 
 const StyledP = styled.h1`
@@ -44,6 +47,15 @@ const StyledP = styled.h1`
     font-weight: 300;
     font-size: 12px;
     max-width: 450px;
+    z-index: 50;
+`;
+
+const RandomImage = styled(motion.img)<{ top: number; right: number }>`
+    position: absolute;
+    top: ${(props) => props.top}px;
+    right: ${(props) => props.right}px;
+    perspective: 200;
+    transform-style: preserve-3d;
 `;
 
 const variants = {
@@ -51,26 +63,63 @@ const variants = {
     off: { opacity: 0, transition: { duration: 0.1, ease: easeInOut } },
 };
 
-const ProjectWindow: React.FC<ProjectWindowProps> = ({ isActive, setIsActive }: ProjectWindowProps) => {
+const ProjectWindow: React.FC<ProjectWindowProps> = ({ index, setIsActive }: ProjectWindowProps) => {
+    const [activeIndex, setActiveIndex] = useState(index);
+
+    const rotateX = useMotionValue(0);
+    const rotateY = useMotionValue(0);
+
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            const { innerWidth, innerHeight } = window;
+
+            const x = e.clientX / innerWidth - 0.5;
+            const y = e.clientY / innerHeight - 0.5;
+
+            rotateX.set(y * 20); // intensity
+            rotateY.set(x * -20);
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
+    }, [rotateX, rotateY]);
+
     return (
         <StyledContainer
             initial={{ x: "-80vw" }}
             animate={{ x: 0, transition: { duration: 0.5, ease: easeInOut } }}
-            exit={{ x: "-80vw", transition: { duration: 0.5, ease: easeInOut, delay: 0.5 } }}
+            exit={{ x: "-80vw", transition: { duration: 0.5, ease: easeInOut } }}
         >
             <StyledInnerContainer>
+                {SetWorks[activeIndex].images.map((item, index) => (
+                    <RandomImage
+                        top={getRandomInt(0, 500)}
+                        right={getRandomInt(0, 500)}
+                        src={item}
+                        animate={{
+                            x: [-5, 5, -5],
+                            y: [-5, 5, -5],
+                        }}
+                        transition={{
+                            duration: getRandomInt(200, 300) / 100,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                        }}
+                        style={{ rotateX, rotateY }}
+                    />
+                ))}
                 <BackButton onClick={() => setIsActive(false)} />
-                <StyledHeader>похудожим со сквозь бабом</StyledHeader>
-                <StyledP>
-                    структура страницы: 1. Обложка: должна быть яркой, большой заголовок, использование 3д элементом. 2.
-                    короткий текст про студию. 3. портфолио съемочных проектов с ярким представлением. проекты поделены
-                    на категории кино, реклама, клипы, другое. при наведении на проект можно перейти к нему и увидеть
-                    ссылку
-                </StyledP>
+                <StyledHeader>
+                    <span>похудожим с{SetWorks[activeIndex].starts_with_s ? "о " : " "} </span>
+                    <span style={{ color: SetWorks[activeIndex].color }}>{SetWorks[activeIndex].name}</span>
+                </StyledHeader>
+                <StyledP>{SetWorks[activeIndex].description}</StyledP>
                 <AnimatePresence>
-                    <motion.div variants={variants} initial="off" animate={isActive ? "on" : "off"}>
-                        <ArrowButton />
-                        <ArrowButton back />
+                    <motion.div key="arrow-buttons" variants={variants} initial="off" animate="on" exit="off">
+                        {activeIndex < SetWorks.length - 1 && (
+                            <ArrowButton onClick={() => setActiveIndex(activeIndex + 1)} />
+                        )}
+                        {activeIndex > 0 && <ArrowButton back onClick={() => setActiveIndex(activeIndex - 1)} />}
                     </motion.div>
                 </AnimatePresence>
             </StyledInnerContainer>

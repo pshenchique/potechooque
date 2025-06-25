@@ -1,7 +1,6 @@
 import styled from "styled-components";
-import gif from "../assets/cat.gif";
 
-const StyledImage = styled.div<{ scale: number; border: number; top: number }>`
+const StyledImage = styled.div<{ scale: number; border: number; top: number; image:string }>`
     width: 380px;
     height: 200px;
     border-radius: 500px;
@@ -9,7 +8,7 @@ const StyledImage = styled.div<{ scale: number; border: number; top: number }>`
     transform: scale(${(props) => props.scale});
     position: absolute;
     top: ${(props) => props.top}px;
-    background-image: url(${gif});
+    background-image: url(${(props)=>(props.image)});
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -37,9 +36,10 @@ type BubblePlayerProps = {
     scale: number;
     border: number;
     top: number;
+    image: string
     onClick: () => void;
 };
 
-export default function BubblePlayer({ scale, border, top, onClick }: BubblePlayerProps) {
-    return <StyledImage scale={scale / 10} border={border} top={top} onClick={onClick}/>;
+export default function BubblePlayer({ scale, border, top, image, onClick }: BubblePlayerProps) {
+    return <StyledImage scale={scale / 10} border={border} top={top} onClick={onClick} image={image}/>;
 }

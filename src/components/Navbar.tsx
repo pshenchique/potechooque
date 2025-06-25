@@ -1,6 +1,16 @@
 import styled, { css } from "styled-components";
 import Logo from "./Logo";
 import { AnimatePresence, motion } from "framer-motion";
+import { Thresholds } from "../Arrays";
+
+const ScrollTo = (index:number) => {
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const targetY = scrollHeight * (Thresholds[index]+0.01);
+    window.scrollTo({
+        top: targetY,
+        behavior: "smooth",
+    });
+};
 
 const MenuContainer = styled.div`
     display: flex;
@@ -118,13 +128,30 @@ type NavbarProps = {
 export default function Navbar({ isActive, setIsActive, isWindowActive }: NavbarProps) {
     return (
         <MenuContainer>
-            <Logo isClicked={isActive === 0} onClick={() => setIsActive(0)} isWindowActive={isWindowActive} />
-            <MenuItem onClick={() => setIsActive(1)} clicked={1 === isActive} window={isWindowActive}>
+            <Logo
+                isClicked={isActive === 0}
+                onClick={() => {
+                    setIsActive(0);
+                    ScrollTo(0);
+                }}
+                isWindowActive={isWindowActive}
+            />
+            <MenuItem
+                onClick={() => {
+                    setIsActive(1);
+                    ScrollTo(1);
+                }}
+                clicked={1 === isActive}
+                window={isWindowActive}
+            >
                 похудожим
             </MenuItem>
             <SecondContainer>
                 <MenuItem
-                    onClick={() => setIsActive(2)}
+                    onClick={() => {
+                        setIsActive(2);
+                        ScrollTo(2);
+                    }}
                     clicked={2 === isActive || 3 === isActive}
                     window={isWindowActive}
                 >
@@ -141,14 +168,20 @@ export default function Navbar({ isActive, setIsActive, isWindowActive }: Navbar
                             transition={{ duration: 0.5 }}
                         >
                             <HorMenuItem
-                                onClick={() => setIsActive(2)}
+                                onClick={() => {
+                                    setIsActive(2);
+                                    ScrollTo(2);
+                                }}
                                 clicked={2 === isActive}
                                 window={isWindowActive}
                             >
                                 студенческие работы
                             </HorMenuItem>
                             <HorMenuItem
-                                onClick={() => setIsActive(3)}
+                                onClick={() => {
+                                    setIsActive(3);
+                                    ScrollTo(3);
+                                }}
                                 clicked={3 === isActive}
                                 window={isWindowActive}
                             >
@@ -159,10 +192,24 @@ export default function Navbar({ isActive, setIsActive, isWindowActive }: Navbar
                 </AnimatePresence>
             </SecondContainer>
 
-            <MenuItem onClick={() => setIsActive(4)} clicked={4 === isActive} window={isWindowActive}>
+            <MenuItem
+                onClick={() => {
+                    setIsActive(4);
+                    ScrollTo(4);
+                }}
+                clicked={4 === isActive}
+                window={isWindowActive}
+            >
                 мерч
             </MenuItem>
-            <MenuItem onClick={() => setIsActive(5)} clicked={5 === isActive} window={isWindowActive}>
+            <MenuItem
+                onClick={() => {
+                    setIsActive(5);
+                    ScrollTo(5);
+                }}
+                clicked={5 === isActive}
+                window={isWindowActive}
+            >
                 о нас
             </MenuItem>
         </MenuContainer>

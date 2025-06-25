@@ -1,37 +1,39 @@
 import React, { useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Stage } from "@react-three/drei";
-import type { GLTF } from "three-stdlib";
 import * as THREE from "three";
 import styled from "styled-components";
 
 // Props interface
-interface GLTFModelProps {
+type GLTFModelProps = {
     modelPath: string;
-    scale?: number | [number, number, number];
-    position?: [number, number, number];
-}
+    z: number;
+};
 
-type GLTFResult = GLTF & {
+type ModelProps = {
+    modelPath: string;
+    z: number;
+};
+
+type GLTFResult = {
+    scene: THREE.Group;
     nodes: Record<string, THREE.Mesh>;
     materials: Record<string, THREE.Material>;
 };
 
-// Model loader
-const Model: React.FC<GLTFModelProps> = ({ modelPath, scale, position }) => {
+const Model: React.FC<ModelProps> = ({ modelPath, z }) => {
     const { scene } = useGLTF(modelPath) as GLTFResult;
     const ref = useRef<THREE.Group>(null);
-    return <primitive ref={ref} object={scene} scale={scale || 1} position={position || [0, 0, 0]} />;
+
+    return <primitive ref={ref} object={scene} scale={1} position={[0, 0, z]} />;
 };
 
-// Mouse-controlled camera
 const MouseControlledCamera: React.FC = () => {
-    const { camera, size } = useThree();
+    const { camera } = useThree();
 
     useFrame(({ mouse }) => {
-        // Map mouse X (-1 to 1) to camera X position (-2 to 2, or adjust range as needed)
-        camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * -0.02, 0.02);
-        // camera.position.y = THREE.MathUtils.lerp(camera.position.x, mouse.y * -0.2, 0.05);
+        camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 2, 0.1);
+        camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouse.y * -2, 0.1);
         camera.lookAt(0, 0, 0);
     });
 
@@ -46,12 +48,13 @@ const StyledCanvas = styled(Canvas)`
     left: 0;
 `;
 
-// Final Component
-const Model1: React.FC<GLTFModelProps> = (props) => {
+const Model1: React.FC<GLTFModelProps> = ({ modelPath, z }) => {
+    console.log("z position:", z);
+
     return (
-        <StyledCanvas camera={{ position: [0, 0, 5], fov: 50 }}>
-            <Stage environment="city" intensity={0.6}>
-                <Model {...props} />
+        <StyledCanvas camera={{ position: [0, 0, 70], fov: 50 }}>
+            <Stage adjustCamera={false}>
+                <Model modelPath={modelPath} z={z} />
             </Stage>
             <MouseControlledCamera />
         </StyledCanvas>
