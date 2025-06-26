@@ -5,6 +5,7 @@ import styled from "styled-components";
 import ShopWindow from "../components/ShopWindow";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { ShopItems, Thresholds } from "../Arrays";
+import Bubbles from "../assets/bubbles.png";
 
 const StyledContainer = styled(motion.div)`
     display: flex;
@@ -16,6 +17,19 @@ const StyledContainer = styled(motion.div)`
     padding-inline: 40vw;
     padding-top: 20vh;
     height: 100%;
+    pointer-events: painted;
+`;
+
+const BubbleOverlay = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url(${Bubbles});
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 5;
+    pointer-events: none;
 `;
 
 const Shop = () => {
@@ -34,8 +48,12 @@ const Shop = () => {
     const itemCount = ShopItems.length;
 
     const { scrollYProgress } = useScroll();
-    const x = useTransform(scrollYProgress, [Thresholds[4], Thresholds[5]], [0, -containerWidth * 1.22]);
-    const indexFromScroll = useTransform(scrollYProgress, [Thresholds[4], Thresholds[5]], [0, itemCount - 1]);
+    const x = useTransform(scrollYProgress, [Thresholds[4] + 0.1, Thresholds[5] - 0.1], [0, -containerWidth * 1.25]);
+    const indexFromScroll = useTransform(
+        scrollYProgress,
+        [Thresholds[4] + 0.1, Thresholds[5] - 0.1],
+        [0, itemCount - 1]
+    );
 
     useMotionValueEvent(indexFromScroll, "change", (latest) => {
         const index = Math.round(latest);
@@ -45,29 +63,28 @@ const Shop = () => {
     });
 
     return (
-        <>
-            <AnimatePresence mode="wait">
-                {isWindowOpen && <ShopWindow key="shop-window" setIsActive={setIsWindowOpen} index={clickedItem} />}
+        <div>
+            <BubbleOverlay></BubbleOverlay>
+            {isWindowOpen && <ShopWindow key="shop-window" setIsActive={setIsWindowOpen} index={clickedItem} />}
 
-                {!isWindowOpen && (
-                    <StyledContainer style={{ x }} ref={containerRef}>
-                        {ShopItems.map((item, index) => (
-                            <ItemFrame
-                                name={item.name}
-                                price={item.price}
-                                image_small={item.image_small ?? null}
-                                image_main={item.image_main ?? null}
-                                isActive={index === activeItem}
-                                onClick={() => {
-                                    setClickedItem(index);
-                                    setIsWindowOpen(true);
-                                }}
-                            />
-                        ))}
-                    </StyledContainer>
-                )}
-            </AnimatePresence>
-        </>
+            {!isWindowOpen && (
+                <StyledContainer style={{ x }} ref={containerRef}>
+                    {ShopItems.map((item, index) => (
+                        <ItemFrame
+                            name={item.name}
+                            price={item.price}
+                            image_small={item.image_small ?? null}
+                            image_main={item.image_main ?? null}
+                            isActive={index === activeItem}
+                            onClick={() => {
+                                setClickedItem(index);
+                                setIsWindowOpen(true);
+                            }}
+                        />
+                    ))}
+                </StyledContainer>
+            )}
+        </div>
     );
 };
 

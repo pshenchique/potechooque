@@ -10,10 +10,16 @@ import top from "./assets/shop/top.png";
 import bag_main from "./assets/shop/bag-main.png";
 import bag from "./assets/shop/bag.png";
 import cap from "./assets/shop/cap.png";
+import { easeInOut } from "framer-motion";
 
 export const Thresholds = [0, 0.1, 0.2, 0.3, 0.4, 0.9];
 
-
+export const fadeInOut = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.5, ease: easeInOut },
+};
 
 type ShopItem = {
     name: string;
@@ -50,7 +56,6 @@ type ProjectItem = {
     name: string;
     description: string;
     images: string[];
-    preview: string;
     color: string;
     starts_with_s: boolean;
 };
@@ -69,7 +74,6 @@ export const SetWorks: ProjectItem[] = [
             "projects/sqwoz/7.png",
             "projects/sqwoz/8.png",
         ],
-        preview: "",
         color: "var(--color-dark)",
         starts_with_s: true,
     },
@@ -83,7 +87,6 @@ export const SetWorks: ProjectItem[] = [
             "projects/somna/4.png",
             "projects/somna/5.png",
         ],
-        preview: "projects/sqwoz/1.png",
         color: "var(--color-blue)",
         starts_with_s: false,
     },
@@ -98,7 +101,6 @@ export const SetWorks: ProjectItem[] = [
             "projects/yamu/5.png",
             "projects/yamu/6.png",
         ],
-        preview: "",
         color: "var(--color-secondary)",
         starts_with_s: false,
     },
@@ -114,8 +116,23 @@ export const SetWorks: ProjectItem[] = [
             "projects/lida/6.png",
             "projects/lida/7.png",
         ],
-        preview: "",
         color: "var(--color-secondary)",
+        starts_with_s: false,
+    },
+];
+
+export const DirWorks: ProjectItem[] = [
+    {
+        name: "северного сияния",
+        description: `Очень личный первый самостоятельный проект в качестве режиссера. Ярик - молодой талантливый инженер, что живет в своем маленьком идеальном мире, не выходя за рамки своего комфорта и страха. В его жизни словно ураган появляется Анечка, что своей энергией и смелостью напоминает ему  как важно следовать за мечтой! Каждый из них, находя друг друга, также обретает свою свободу и любовь!`,
+        images: [
+            "projects/ss/1.jpg",
+            "projects/ss/2.jpg",
+            "projects/ss/3.jpg",
+            "projects/ss/4.jpg",
+            "projects/ss/5.jpg",
+        ],
+        color: "var(--color-blue)",
         starts_with_s: false,
     },
 ];
@@ -139,3 +156,15 @@ export const Bubbles: Bubble[] = [
     { scale: 8, border: 30, top: 700, duration: 16, delay: 3, gif: "projects/lida/8.gif" },
     { scale: 9, border: 20, top: 300, duration: 15, delay: 9, gif: "projects/lida/8.gif" },
 ];
+
+export const Bubbles2: Bubble[] = [
+    { scale: 7, border: 10, top: 100, duration: 20, delay: 0, gif: "projects/ss/6.gif" },
+    { scale: 10, border: 30, top: 500, duration: 25, delay: 10, gif: "projects/ss/6.gif" },
+    { scale: 8, border: 40, top: 300, duration: 15, delay: 2, gif: "projects/ss/6.gif" },
+    { scale: 7, border: 20, top: 700, duration: 25, delay: 3, gif: "projects/ss/6.gif" },
+    { scale: 10, border: 20, top: 400, duration: 17, delay: 4, gif: "projects/ss/6.gif" },
+    { scale: 7, border: 30, top: 200, duration: 20, delay: 6, gif: "projects/ss/6.gif" },
+    { scale: 8, border: 30, top: 700, duration: 16, delay: 3, gif: "projects/ss/6.gif" },
+    { scale: 9, border: 20, top: 300, duration: 15, delay: 9, gif: "projects/ss/6.gif" },
+];
+

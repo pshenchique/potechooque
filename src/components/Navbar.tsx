@@ -3,9 +3,9 @@ import Logo from "./Logo";
 import { AnimatePresence, motion } from "framer-motion";
 import { Thresholds } from "../Arrays";
 
-const ScrollTo = (index:number) => {
+const ScrollTo = (index: number) => {
     const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const targetY = scrollHeight * (Thresholds[index]+0.01);
+    const targetY = scrollHeight * (Thresholds[index] + 0.01);
     window.scrollTo({
         top: targetY,
         behavior: "smooth",
@@ -64,7 +64,6 @@ const MenuItemInheritedItems = css<{ clicked: boolean; window: boolean }>`
 `;
 
 const MenuItem = styled.p<{ clicked: boolean; window: boolean }>`
-    
     writing-mode: vertical-rl; /* Rotates text 90 degrees */
     transform: rotate(180deg); /* Adjusts orientation for readability */
     text-align: center;
@@ -83,8 +82,7 @@ const MenuItem = styled.p<{ clicked: boolean; window: boolean }>`
         transform: scale(0.85) rotate(180deg);
     }
 
-    transition:
-        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 `;
 
 const SecondContainer = styled.div`
@@ -115,8 +113,7 @@ const HorMenuItem = styled.li<{ clicked: boolean; window: boolean }>`
         transform: scale(0.85);
     }
 
-    transition:
-        transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 `;
 
 type NavbarProps = {
@@ -131,15 +128,19 @@ export default function Navbar({ isActive, setIsActive, isWindowActive }: Navbar
             <Logo
                 isClicked={isActive === 0}
                 onClick={() => {
-                    setIsActive(0);
-                    ScrollTo(0);
+                    if (!isWindowActive) {
+                        setIsActive(0);
+                        ScrollTo(0);
+                    }
                 }}
                 isWindowActive={isWindowActive}
             />
             <MenuItem
                 onClick={() => {
-                    setIsActive(1);
-                    ScrollTo(1);
+                    if (!isWindowActive) {
+                        setIsActive(1);
+                        ScrollTo(1);
+                    }
                 }}
                 clicked={1 === isActive}
                 window={isWindowActive}
@@ -149,8 +150,10 @@ export default function Navbar({ isActive, setIsActive, isWindowActive }: Navbar
             <SecondContainer>
                 <MenuItem
                     onClick={() => {
-                        setIsActive(2);
-                        ScrollTo(2);
+                        if (!isWindowActive) {
+                            setIsActive(2);
+                            ScrollTo(2);
+                        }
                     }}
                     clicked={2 === isActive || 3 === isActive}
                     window={isWindowActive}
@@ -169,8 +172,10 @@ export default function Navbar({ isActive, setIsActive, isWindowActive }: Navbar
                         >
                             <HorMenuItem
                                 onClick={() => {
-                                    setIsActive(2);
-                                    ScrollTo(2);
+                                    if (!isWindowActive) {
+                                        setIsActive(2);
+                                        ScrollTo(2);
+                                    }
                                 }}
                                 clicked={2 === isActive}
                                 window={isWindowActive}
@@ -179,8 +184,10 @@ export default function Navbar({ isActive, setIsActive, isWindowActive }: Navbar
                             </HorMenuItem>
                             <HorMenuItem
                                 onClick={() => {
-                                    setIsActive(3);
-                                    ScrollTo(3);
+                                    if (!isWindowActive) {
+                                        setIsActive(3);
+                                        ScrollTo(3);
+                                    }
                                 }}
                                 clicked={3 === isActive}
                                 window={isWindowActive}
@@ -194,8 +201,10 @@ export default function Navbar({ isActive, setIsActive, isWindowActive }: Navbar
 
             <MenuItem
                 onClick={() => {
-                    setIsActive(4);
-                    ScrollTo(4);
+                    if (!isWindowActive) {
+                        setIsActive(4);
+                        ScrollTo(4);
+                    }
                 }}
                 clicked={4 === isActive}
                 window={isWindowActive}
@@ -204,8 +213,10 @@ export default function Navbar({ isActive, setIsActive, isWindowActive }: Navbar
             </MenuItem>
             <MenuItem
                 onClick={() => {
-                    setIsActive(5);
-                    ScrollTo(5);
+                    if (!isWindowActive) {
+                        setIsActive(5);
+                        ScrollTo(5);
+                    }
                 }}
                 clicked={5 === isActive}
                 window={isWindowActive}

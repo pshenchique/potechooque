@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Model1 from "./components/Model1";
+import ModelHandler from "./components/ModelHandler";
 import Navbar from "./components/Navbar";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -8,15 +8,19 @@ import Shop from "./pages/Shop";
 import BubbleHandler from "./pages/BubbleHandler";
 import Info from "./pages/Info";
 import { Thresholds } from "./Arrays";
-import back from "./assets/back.png"
+import back from "./assets/back.png";
+import ModelHandler2 from "./components/ModelHandler2";
+import ModelHandler3 from "./components/ModelHandler3";
+import ProjectWindow2 from "./components/ProjectWindow2";
+import BubbleHandler2 from "./pages/BubbleHandler2";
 
-const modelUrl = `${import.meta.env.BASE_URL}models/m1.gltf`;
+const modelPrefix = `${import.meta.env.BASE_URL}models/`;
 
 const ScrollArea = styled.div`
-    height: 500vh;
+    height: 700vh;
 `;
 
-const FixedContent = styled.div`
+const FixedContent = styled(motion.div)`
     position: fixed;
     top: 0;
     left: 0;
@@ -34,10 +38,16 @@ function App() {
     const { scrollYProgress } = useScroll();
     const [activeSection, setActiveSection] = useState(0);
     const [leftWindowOpen, setLeftWindowOpen] = useState(false);
+    const [leftWindowOpen2, setLeftWindowOpen2] = useState(false);
     const [activeLeftWindowIndex, setActiveLeftWindowActive] = useState(0);
+
+    const bgX = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
     const CameraMotion = useTransform(scrollYProgress, [0, 0.1], [100, 70]);
     const [cameraValue, setCameraValue] = useState(100);
+
+    const CameraMotion2 = useTransform(scrollYProgress, [Thresholds[4], Thresholds[4] + 0.05], [40, 70]);
+    const [cameraValue2, setCameraValue2] = useState(40);
 
     useEffect(() => {
         const unsubscribe = CameraMotion.on("change", (latest) => {
@@ -46,6 +56,14 @@ function App() {
 
         return () => unsubscribe(); // Clean up on unmount
     }, [CameraMotion]);
+
+    useEffect(() => {
+        const unsubscribe = CameraMotion2.on("change", (latest) => {
+            setCameraValue2(latest);
+        });
+
+        return () => unsubscribe(); // Clean up on unmount
+    }, [CameraMotion2]);
 
     useEffect(() => {
         const updateActiveSection = (progress: number) => {
@@ -65,21 +83,33 @@ function App() {
 
     return (
         <ScrollArea>
-            <FixedContent>
-                <Navbar isActive={activeSection} setIsActive={setActiveSection} isWindowActive={leftWindowOpen} />
+            <FixedContent style={{ backgroundPositionX: bgX, backgroundPositionY: "center" }}>
+                <Navbar isActive={activeSection} setIsActive={setActiveSection} isWindowActive={leftWindowOpen || leftWindowOpen2} />
 
                 <AnimatePresence>
                     {leftWindowOpen && <ProjectWindow index={activeLeftWindowIndex} setIsActive={setLeftWindowOpen} />}
+                    {leftWindowOpen2 && <ProjectWindow2 setIsActive={setLeftWindowOpen2} />}
 
-                    {activeSection !== 5 && activeSection !== 6 && !leftWindowOpen && (
-                        <Model1 modelPath={modelUrl} z={cameraValue} />
-                    )}
+                    {activeSection !== 5 &&
+                        activeSection !== 6 &&
+                        !leftWindowOpen &&
+                        (activeSection < 2 ? (
+                            <ModelHandler modelPath={modelPrefix + "m1.gltf"} z={cameraValue} />
+                        ) : activeSection < 4 ? (
+                            <ModelHandler2 modelPath={modelPrefix + "m2.gltf"} z={cameraValue} />
+                        ) : (
+                            <ModelHandler3 modelPath={modelPrefix + "m3.gltf"} z={cameraValue2} />
+                        ))}
 
                     {activeSection === 1 && !leftWindowOpen && (
                         <BubbleHandler setIsActive={setLeftWindowOpen} setActiveIndex={setActiveLeftWindowActive} />
                     )}
 
-                    {activeSection == 4 && <Shop />}
+                    {(activeSection === 2 || activeSection === 3) && !leftWindowOpen2 && (
+                        <BubbleHandler2 setIsActive={setLeftWindowOpen2} />
+                    )}
+
+                    {activeSection == 4 && cameraValue2 > 65 && <Shop />}
 
                     {activeSection == 5 && <Info />}
                 </AnimatePresence>
