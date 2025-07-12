@@ -56,7 +56,7 @@ const StyledMotionContainer = styled(motion.div)`
     position: absolute !important;
     top: 0;
     left: 0;
-    z-index: -5;
+
 `;
 
 const ModelHandler2: React.FC<GLTFModelProps> = ({ modelPath, z }) => {

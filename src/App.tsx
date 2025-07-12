@@ -11,8 +11,6 @@ import { Thresholds } from "./Arrays";
 import back from "./assets/back.png";
 import ModelHandler2 from "./components/ModelHandler2";
 import ModelHandler3 from "./components/ModelHandler3";
-import ProjectWindow2 from "./components/ProjectWindow2";
-import BubbleHandler2 from "./pages/BubbleHandler2";
 
 const modelPrefix = `${import.meta.env.BASE_URL}models/`;
 
@@ -38,7 +36,7 @@ function App() {
     const { scrollYProgress } = useScroll();
     const [activeSection, setActiveSection] = useState(0);
     const [leftWindowOpen, setLeftWindowOpen] = useState(false);
-    const [leftWindowOpen2, setLeftWindowOpen2] = useState(false);
+    const [leftWindowIsSet, setLeftWindowIsSet] = useState(true);
     const [activeLeftWindowIndex, setActiveLeftWindowActive] = useState(0);
 
     const bgX = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
@@ -84,11 +82,16 @@ function App() {
     return (
         <ScrollArea>
             <FixedContent style={{ backgroundPositionX: bgX, backgroundPositionY: "center" }}>
-                <Navbar isActive={activeSection} setIsActive={setActiveSection} isWindowActive={leftWindowOpen || leftWindowOpen2} />
+                <Navbar isActive={activeSection} setIsActive={setActiveSection} isWindowActive={leftWindowOpen} />
 
                 <AnimatePresence>
-                    {leftWindowOpen && <ProjectWindow index={activeLeftWindowIndex} setIsActive={setLeftWindowOpen} />}
-                    {leftWindowOpen2 && <ProjectWindow2 setIsActive={setLeftWindowOpen2} />}
+                    {leftWindowOpen && (
+                        <ProjectWindow
+                            index={activeLeftWindowIndex}
+                            setIsActive={setLeftWindowOpen}
+                            isSetWorks={leftWindowIsSet}
+                        />
+                    )}
 
                     {activeSection !== 5 &&
                         activeSection !== 6 &&
@@ -101,12 +104,13 @@ function App() {
                             <ModelHandler3 modelPath={modelPrefix + "m3.gltf"} z={cameraValue2} />
                         ))}
 
-                    {activeSection === 1 && !leftWindowOpen && (
-                        <BubbleHandler setIsActive={setLeftWindowOpen} setActiveIndex={setActiveLeftWindowActive} />
-                    )}
-
-                    {(activeSection === 2 || activeSection === 3) && !leftWindowOpen2 && (
-                        <BubbleHandler2 setIsActive={setLeftWindowOpen2} />
+                    {(activeSection === 1 || activeSection === 2 || activeSection === 3)  && !leftWindowOpen && (
+                        <BubbleHandler
+                            setIsActive={setLeftWindowOpen}
+                            setActiveIndex={setActiveLeftWindowActive}
+                            setLeftWindowToSet={setLeftWindowIsSet}
+                            isLeftWindowSet={activeSection === 1}
+                        />
                     )}
 
                     {activeSection == 4 && cameraValue2 > 65 && <Shop />}

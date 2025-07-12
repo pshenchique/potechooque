@@ -3,10 +3,11 @@ import styled from "styled-components";
 import BackButton from "./BackButton";
 import ArrowButton from "./ArrowButton";
 import { AnimatePresence, motion, easeInOut, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { SetWorks } from "../Arrays";
+import { DirWorks, SetWorks } from '../Arrays';
 import { getRandomInt } from "../utils";
 
 type ProjectWindowProps = {
+    isSetWorks?: boolean
     index: number;
     setIsActive: (state: boolean) => void;
 };
@@ -52,8 +53,8 @@ const StyledP = styled.h1`
 
 const RandomImage = styled(motion.img)<{ top: number; right: number }>`
     position: absolute;
-    top: ${(props) => props.top}px;
-    right: ${(props) => props.right}px;
+    top: ${(props) => props.top}%;
+    right: ${(props) => props.right}%;
     perspective: 200;
     transform-style: preserve-3d;
 `;
@@ -63,10 +64,14 @@ const variants = {
     off: { opacity: 0, transition: { duration: 0.1, ease: easeInOut } },
 };
 
+
 const prefix = `${import.meta.env.BASE_URL}`;
 
-const ProjectWindow: React.FC<ProjectWindowProps> = ({ index, setIsActive }: ProjectWindowProps) => {
+const ProjectWindow: React.FC<ProjectWindowProps> = ({ isSetWorks = false, index, setIsActive }: ProjectWindowProps) => {
+    const activeList = isSetWorks ? SetWorks : DirWorks
+
     const [activeIndex, setActiveIndex] = useState(index);
+    
 
     const rotateX = useMotionValue(0);
     const rotateY = useMotionValue(0);
@@ -93,11 +98,11 @@ const ProjectWindow: React.FC<ProjectWindowProps> = ({ index, setIsActive }: Pro
             exit={{ x: "-80vw", transition: { duration: 0.5, ease: easeInOut } }}
         >
             <StyledInnerContainer>
-                {SetWorks[activeIndex].images.map((item, index) => (
+                {activeList[activeIndex].images.map((item: string, index: string | number) => (
                     <RandomImage
-                        top={getRandomInt(0, 500)}
-                        right={getRandomInt(0, 500)}
-                        src={prefix+item}
+                        top={activeList[activeIndex].top[index]}
+                        right={activeList[activeIndex].right[index]}
+                        src={prefix + item}
                         animate={{
                             x: [-5, 5, -5],
                             y: [-5, 5, -5],
@@ -112,13 +117,13 @@ const ProjectWindow: React.FC<ProjectWindowProps> = ({ index, setIsActive }: Pro
                 ))}
                 <BackButton onClick={() => setIsActive(false)} />
                 <StyledHeader>
-                    <span>похудожим с{SetWorks[activeIndex].starts_with_s ? "о " : " "} </span>
-                    <span style={{ color: SetWorks[activeIndex].color }}>{SetWorks[activeIndex].name}</span>
+                    <span> {activeList[activeIndex].pre+" "} </span>
+                    <span style={{ color: activeList[activeIndex].color }}>{activeList[activeIndex].name}</span>
                 </StyledHeader>
-                <StyledP>{SetWorks[activeIndex].description}</StyledP>
+                <StyledP>{activeList[activeIndex].description}</StyledP>
                 <AnimatePresence>
                     <motion.div key="arrow-buttons" variants={variants} initial="off" animate="on" exit="off">
-                        {activeIndex < SetWorks.length - 1 && (
+                        {activeIndex < activeList.length - 1 && (
                             <ArrowButton onClick={() => setActiveIndex(activeIndex + 1)} />
                         )}
                         {activeIndex > 0 && <ArrowButton back onClick={() => setActiveIndex(activeIndex - 1)} />}

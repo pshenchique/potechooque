@@ -2,12 +2,13 @@ import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import BubblePlayer from "../components/BubblePlayer"; // Adjust path as needed
 import { useMemo } from "react";
 import styled from "styled-components";
-import { getRandomInt } from "../utils";
-import { Bubbles } from "../Arrays";
+import { DirBubbles, DirLeftWindowNames, SetBubbles, SetLeftWindowNames } from "../Arrays";
 
 type BubbleHandlerProps = {
     setIsActive: (state: boolean) => void;
     setActiveIndex: (index: number) => void;
+    setLeftWindowToSet: (state: boolean) => void;
+    isLeftWindowSet: boolean
 };
 
 const MotionContainer = styled(motion.div)`
@@ -26,72 +27,13 @@ const StyledHeader = styled.p<{ font: string; scale: number; caps: string; top: 
     user-select: none;
 `;
 
-const BubbleHandler: React.FC<BubbleHandlerProps> = ({ setIsActive, setActiveIndex }: BubbleHandlerProps) => {
-    // const bubbles = useMemo(() => {
-    //     return Array.from({ length: 10 }, (_, i) => ({
-    //         id: i,
-    //         scale: getRandomInt(7, 10),
-    //         border: getRandomInt(10, 40),
-    //         top: getRandomInt(10, 700),
-    //         duration: getRandomInt(15, 25), // Speed of movement
-    //         delay: getRandomInt(0, 50),
-    //     }));
-    // }, []);
+const BubbleHandler: React.FC<BubbleHandlerProps> = ({ setIsActive, setActiveIndex, setLeftWindowToSet, isLeftWindowSet }: BubbleHandlerProps) => {
 
     const names = useMemo(() => {
-        return [
-            {
-                id: 0,
-                name: "пoчучуть",
-                font: "Comediant Script",
-                caps: "first",
-                scale: 128,
-                top: 100,
-                duration: getRandomInt(15, 25),
-                delay: 2,
-            },
-            {
-                id: 1,
-                name: "пoчучуть",
-                font: "Playfair Display",
-                caps: "all",
-                scale: 64,
-                top: 300,
-                duration: getRandomInt(15, 25),
-                delay: 10,
-            },
-            {
-                id: 2,
-                name: "похудожим",
-                font: "Undertale Battle Font",
-                caps: "all",
-                scale: 150,
-                top: 600,
-                duration: getRandomInt(15, 25),
-                delay: 0,
-            },
-            {
-                id: 3,
-                name: "клипы",
-                font: "Rimma Sans",
-                caps: "all",
-                scale: 96,
-                top: 350,
-                duration: getRandomInt(15, 25),
-                delay: 20,
-            },
-            {
-                id: 4,
-                name: "реклама",
-                font: "Miama Nueva",
-                caps: "first",
-                scale: 64,
-                top: 550,
-                duration: getRandomInt(15, 25),
-                delay: 15,
-            },
-        ];
-    }, []);
+        return isLeftWindowSet ? SetLeftWindowNames : DirLeftWindowNames;
+    }, [isLeftWindowSet]);
+
+    const CurrentBubbles = isLeftWindowSet ? SetBubbles : DirBubbles
 
     return (
         <motion.div
@@ -113,7 +55,7 @@ const BubbleHandler: React.FC<BubbleHandlerProps> = ({ setIsActive, setActiveInd
                 </MotionContainer>
             ))}
 
-            {Bubbles.map((bubble, index) => (
+            {CurrentBubbles.map((bubble, index) => (
                 <MotionContainer
                     key={index}
                     initial={{ left: "100vw" }}
@@ -121,13 +63,14 @@ const BubbleHandler: React.FC<BubbleHandlerProps> = ({ setIsActive, setActiveInd
                     transition={{ duration: bubble.duration, delay: bubble.delay, repeat: Infinity }}
                 >
                     <BubblePlayer
-                    image={bubble.gif}
+                        image={bubble.gif}
                         scale={bubble.scale}
                         border={bubble.border}
                         top={bubble.top}
                         onClick={() => {
                             setIsActive(true);
-                            setActiveIndex(Math.floor(index/2));
+                            setActiveIndex(Math.floor(index / 2));
+                            setLeftWindowToSet(isLeftWindowSet);
                         }}
                     />
                 </MotionContainer>
